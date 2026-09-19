@@ -16,7 +16,7 @@ always_comb begin
     out = syncReg[1];
 end
 
-always_ff @(posedge clk or negedge rst) begin
+always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         syncReg <= {DEFAULT[0], DEFAULT[0]};
     end else begin

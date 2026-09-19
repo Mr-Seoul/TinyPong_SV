@@ -9,7 +9,7 @@ module clockModule
 logic [1:0] clockCountReg = 0;
 
 //Slow clock 4x to test on basys 3
-always_ff @(posedge clk or negedge rst) begin
+always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         clockCountReg <= 0;
     end else begin

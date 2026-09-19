@@ -46,7 +46,7 @@ always_comb begin
     paddleY = paddleYReg;
 end
 
-always_ff @(posedge clk or negedge rst) begin
+always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         paddleYReg <= 240;
         paddleXReg <= (PADDLE_SIDE) ? $bits(paddleXReg)'(settings::paddleWallDist + settings::paddleWidth) : $bits(paddleXReg)'(640 - settings::paddleWallDist - settings::paddleWidth);

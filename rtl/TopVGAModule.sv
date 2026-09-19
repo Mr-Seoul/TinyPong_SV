@@ -74,7 +74,7 @@ synchronizer #(.DEFAULT(0)) input2Synchronizer (
 );
 
 //Debouncers
-debouncer #(.SIZE(19)) input1Debouncer (
+debouncer #(.SIZE(16)) input1Debouncer (
     .clk(clk),
     .rst(synchronizedReset),
 
@@ -82,7 +82,7 @@ debouncer #(.SIZE(19)) input1Debouncer (
     .out(debouncedInput1)
 );
 
-debouncer #(.SIZE(19)) input2Debouncer (
+debouncer #(.SIZE(16)) input2Debouncer (
     .clk(clk),
     .rst(synchronizedReset),
 
@@ -130,7 +130,7 @@ always_comb begin
     vsync = vSyncReg;
 end
 
-always_ff @(posedge clk or negedge synchronizedReset) begin
+always_ff @(posedge clk or posedge synchronizedReset) begin
     if (synchronizedReset) begin
         screenXReg <= 0;
         screenYReg <= 0;

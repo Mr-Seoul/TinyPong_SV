@@ -124,7 +124,7 @@ always_comb begin
     end
 end
 
-always_ff @(posedge clk or negedge rst) begin
+always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         gameOverReg <= 0;
     end else begin
