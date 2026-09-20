@@ -22,8 +22,7 @@ class debouncer_agent extends uvm_agent;
   virtual function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     driver.seq_item_port.connect(sequencer.seq_item_export);
-    driver.ap.connect(coverage_reporter.input_export);
-    monitor.ap.connect(coverage_reporter.output_export);
+    monitor.ap.connect(coverage_reporter.trans_export);
   endfunction
 
 endclass

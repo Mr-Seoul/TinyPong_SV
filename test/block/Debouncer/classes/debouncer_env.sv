@@ -1,12 +1,10 @@
 class debouncer_env extends uvm_env;
 
   `uvm_component_utils(debouncer_env)
-
-  virtual debouncer_if vif;
-
   debouncer_agent agent;
   debouncer_predictor predictor;
   bit_scoreboard scoreboard;
+  virtual debouncer_if vif;
 
   function new(string name = "debouncer_env", uvm_component parent = null);
     super.new(name, parent);
