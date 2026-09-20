@@ -1,11 +1,9 @@
 class bit_monitor extends uvm_monitor;
 
   `uvm_component_utils(bit_monitor)
-
+  uvm_analysis_port #(bit_transaction) ap;
   typedef `VIF_TYPE VIF;
   VIF vif;
-
-  uvm_analysis_port #(bit_transaction) ap;
 
   function new(string name = "bit_monitor", uvm_component parent = null);
     super.new(name, parent);
