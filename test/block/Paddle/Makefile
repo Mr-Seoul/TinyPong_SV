@@ -1,6 +1,6 @@
 UVM_HOME ?=
 TOP       = tb_top
-TEST     ?= paddle_base_test
+TEST     ?= paddle_test
 
 ifeq ($(UVM_HOME),)
 $(error UVM_HOME is not set. Point it at a checkout of Accellera's uvm-core)
