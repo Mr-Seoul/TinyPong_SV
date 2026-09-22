@@ -5,7 +5,7 @@ class bit_transaction extends uvm_sequence_item;
   bit out;
 
   constraint c1 { in dist {0:/80, 1:/20}; }
-  constraint c2 { rst dist {0:/80, 1:/20}; }
+  constraint c2 { rst dist {0:/98, 1:/2}; }
 
   `uvm_object_utils(bit_transaction)
 
@@ -13,16 +13,23 @@ class bit_transaction extends uvm_sequence_item;
     super.new(name);
   endfunction
 
-  function do_copy(bit_transaction ext_transaction);
+  virtual function void do_copy(uvm_object rhs);
+    bit_transaction ext_transaction;
+    super.do_copy(rhs);
+    if (!$cast(ext_transaction, rhs))
+      `uvm_fatal("COPY", "rhs is not a bit_transaction")
     this.out = ext_transaction.out;
     this.in = ext_transaction.in;
   endfunction
 
-  function do_compare(bit_transaction ext_transaction);
-    return this.out === ext_transaction.out && this.in === ext_transaction.in; 
+  virtual function bit do_compare(uvm_object rhs, uvm_comparer comparer);
+  bit_transaction ext_transaction;
+    if (!$cast(ext_transaction, rhs))
+      `uvm_fatal("COMP", "rhs is not a bit_transaction")
+    return super.do_compare(rhs, comparer) && this.out === ext_transaction.out && this.in === ext_transaction.in; 
   endfunction
 
-  function string convert2string();
+  virtual function string convert2string();
     string s = $sformatf("in=0x%0d, out=0x%0d", this.in, this.out);
     return s;
   endfunction
