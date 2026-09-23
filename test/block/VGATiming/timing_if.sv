@@ -4,7 +4,7 @@ interface timing_if (
 
     logic signed [10:0] screenX;
     logic signed [10:0] screenY;
-    bit screenDone; //Not used, but standardizes interface
+    bit screenDone; //Not exact name in DUT, but standardizes interface
 
     logic hsync;
     logic vsync;
