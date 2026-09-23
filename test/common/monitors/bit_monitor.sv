@@ -1,7 +1,7 @@
 class bit_monitor extends uvm_monitor;
 
   `uvm_component_utils(bit_monitor)
-  uvm_analysis_port #(bit_transaction) ap;
+  uvm_analysis_port #(bit_rst_transaction) ap;
   typedef `VIF_TYPE VIF;
   VIF vif;
 
@@ -17,14 +17,14 @@ class bit_monitor extends uvm_monitor;
   endfunction
 
   virtual task main_phase(uvm_phase phase);
-    bit_transaction trans;
+    bit_rst_transaction trans;
     super.main_phase(phase);
     forever begin
       @(vif.monitor_cb);
-      trans = bit_transaction::type_id::create("trans");
-      trans.in  = vif.monitor_cb.in;
-      trans.rst = vif.monitor_cb.rst;
-      trans.out = vif.monitor_cb.out;
+      trans = bit_rst_transaction::type_id::create("trans");
+      trans.bt_trans.in  = vif.monitor_cb.in;
+      trans.bt_trans.out = vif.monitor_cb.out;
+      trans.rst_trans.rst = vif.monitor_cb.rst;
       ap.write(trans);
     end
   endtask

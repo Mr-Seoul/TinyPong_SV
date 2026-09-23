@@ -3,7 +3,7 @@ class bit_scoreboard extends uvm_scoreboard;
   `uvm_component_utils(bit_scoreboard)
 
   uvm_tlm_analysis_fifo #(bit_transaction) expected_fifo;
-  uvm_tlm_analysis_fifo #(bit_transaction) actual_fifo;
+  uvm_tlm_analysis_fifo #(bit_rst_transaction) actual_fifo;
 
   function new(string name = "bit_scoreboard", uvm_component parent = null);
     super.new(name, parent);
@@ -17,13 +17,13 @@ class bit_scoreboard extends uvm_scoreboard;
 
   virtual task main_phase(uvm_phase phase);
     bit_transaction expected;
-    bit_transaction actual;
+    bit_rst_transaction actual;
 
     forever begin
       expected_fifo.get(expected);
       actual_fifo.get(actual);
-      if (actual.out !== expected.out)
-        `uvm_error("FAIL", $sformatf("in=%0b, rst=%0b, expected out=%0b, got out=%0b",actual.in, actual.rst, expected.out, actual.out))
+      if (actual.bt_trans.out !== expected.out)
+        `uvm_error("FAIL", $sformatf("in=%0b, rst=%0b, expected out=%0b, got out=%0b",actual.bt_trans.in, actual.rst_trans.rst, expected.out, actual.bt_trans.out))
     end
   endtask
 

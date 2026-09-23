@@ -34,12 +34,10 @@ class frame_bit_driver extends uvm_driver #(bit_transaction);
 
     repeat (420000 - stable_cycles) begin
       vif.driver_cb.in  <= 1'($urandom_range(0, 1));
-      vif.driver_cb.rst <= 1'b0;
       @(vif.driver_cb);
     end
     repeat (stable_cycles) begin
       vif.driver_cb.in  <= trans.in;
-      vif.driver_cb.rst <= trans.rst;
       @(vif.driver_cb);
     end
   endtask

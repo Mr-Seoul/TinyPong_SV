@@ -55,8 +55,8 @@ class paddle_coverage extends uvm_component;
 
     cp_paddleY: coverpoint paddleY {
       bins low = { settings::paddleHeight };
-      bins mid = { [settings::paddleHeight+1:478] };
-      bins high = { 479 };
+      bins mid = { [settings::paddleHeight+1:479] };
+      bins high = { 480 };
     }
 
     cp_inbound: coverpoint inbound {
@@ -81,7 +81,7 @@ class paddle_coverage extends uvm_component;
   endfunction
 
   virtual function void write_in(screen_button_transaction trans);
-    in_bt_cg.sample(trans.bt_trans.in, trans.bt_trans.rst);
+    in_bt_cg.sample(trans.bt_trans.in, trans.rst_trans.rst);
     in_sc_cg.sample(trans.sc_trans.screenX, trans.sc_trans.screenDone);
   endfunction
 

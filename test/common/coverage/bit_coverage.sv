@@ -1,7 +1,7 @@
 class bit_coverage extends uvm_component;
   `uvm_component_utils(bit_coverage)
 
-  uvm_analysis_imp_out #(bit_transaction, bit_coverage) trans_export;
+  uvm_analysis_imp #(bit_rst_transaction, bit_coverage) trans_export;
 
   real in_coverage;
   real out_coverage;
@@ -40,13 +40,12 @@ class bit_coverage extends uvm_component;
     super.new(name, parent);
     in_cg = new();
     out_cg = new();
-    input_export = new("input_export", this);
-    output_export = new("output_export", this);
+    trans_export = new("trans_export", this);
   endfunction
 
-  virtual function void write(bit_transaction trans);
-    out_cg.sample(trans.out);
-    in_cg.sample(trans.out);
+  virtual function void write(bit_rst_transaction trans);
+    out_cg.sample(trans.bt_trans.out);
+    in_cg.sample(trans.bt_trans.in, trans.rst_trans.rst);
   endfunction
 
   virtual function void extract_phase(uvm_phase phase);

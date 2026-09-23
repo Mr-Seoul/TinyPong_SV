@@ -10,7 +10,7 @@ VERILATOR_FLAGS = \
 	--binary \
 	--timing \
 	-sv \
-	-j 0 \
+	-j 4 \
 	--coverage \
 	+define+UVM_NO_DPI \
 	+incdir+$(UVM_HOME)/src \

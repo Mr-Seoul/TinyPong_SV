@@ -31,7 +31,7 @@ class ball_monitor extends uvm_monitor;
       in_trans.sc_trans.screenDone = vif.monitor_cb.screenDone;
       in_trans.pd_l_trans.paddleY = vif.monitor_cb.paddleLeftY;
       in_trans.pd_r_trans.paddleY = vif.monitor_cb.paddleRightY;
-      in_trans.bt_trans.rst = vif.monitor_cb.rst;
+      in_trans.rst_trans.rst = vif.monitor_cb.rst;
       in_ap.write(in_trans);
 
       out_trans = ball_transaction::type_id::create("out trans");

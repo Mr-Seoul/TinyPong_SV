@@ -1,5 +1,5 @@
 
-class debouncer_predictor extends uvm_subscriber #(bit_transaction);
+class debouncer_predictor extends uvm_subscriber #(bit_rst_transaction);
 
   `uvm_component_utils(debouncer_predictor)
   uvm_analysis_port #(bit_transaction) ap;
@@ -16,22 +16,22 @@ class debouncer_predictor extends uvm_subscriber #(bit_transaction);
     ap = new("ap", this);
   endfunction
 
-  virtual function void write(bit_transaction trans);
+  virtual function void write(bit_rst_transaction trans);
     bit_transaction expected = bit_transaction::type_id::create("expected");
     int max_count = (1 << 16) - 1;
 
-    if (trans.rst) begin
+    if (trans.rst_trans.rst) begin
       count = 0;
       out_reg = 0;
     end
 
     expected.out = out_reg;
 
-    if (!trans.rst) begin
-      if (trans.in == out_reg) begin
+    if (!trans.rst_trans.rst) begin
+      if (trans.bt_trans.in == out_reg) begin
         count = 0;
       end else begin
-        if (count == max_count) out_reg = trans.in;
+        if (count == max_count) out_reg = trans.bt_trans.in;
         count = (count == max_count) ? 0 : count + 1;
       end
     end

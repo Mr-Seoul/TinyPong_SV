@@ -27,7 +27,7 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
 
     ball_transaction expected = ball_transaction::type_id::create("expected");
 
-    if (trans.bt_trans.rst) begin
+    if (trans.rst_trans.rst) begin
       ball_x = 320;
       ball_y = 64;
       ball_speed = settings::ballSpeed;
@@ -42,7 +42,7 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
     expected.outLeftBound = ball_x <= 0;
     expected.outRightBound = ball_x > 640;
 
-    if (!trans.bt_trans.rst && trans.sc_trans.screenDone) begin
+    if (!trans.rst_trans.rst && trans.sc_trans.screenDone) begin
       ball_x += going_right ? ball_speed : -ball_speed;
       ball_y += going_down ? ball_speed : -ball_speed;
 

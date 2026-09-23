@@ -1,13 +1,13 @@
-class chain_bit_driver extends uvm_driver #(bit_transaction);
+class reset_driver #(int MIN = 1, int MAX = 10) extends uvm_driver #(reset_transaction);
 
-  `uvm_component_utils(chain_bit_driver)
+  `uvm_component_param_utils(reset_driver #(MIN, MAX))
 
-  uvm_analysis_port #(bit_transaction) ap;
-  bit_transaction trans;
+  uvm_analysis_port #(reset_transaction) ap;
+  reset_transaction trans;
   typedef `VIF_TYPE VIF;
   VIF vif;
 
-  function new(string name = "chain_bit_driver", uvm_component parent = null);
+  function new(string name = "reset_driver", uvm_component parent = null);
     super.new(name, parent);
   endfunction
 
@@ -28,11 +28,11 @@ class chain_bit_driver extends uvm_driver #(bit_transaction);
     end
   endtask
 
-  virtual task drive_trans(bit_transaction trans);
-    repeat (2) begin
-      vif.driver_cb.in  <= trans.in;
-      @(vif.driver_cb);
-    end
+  virtual task drive_trans(reset_transaction trans);
+    vif.driver_cb.rst <= trans.rst;
+    @(vif.driver_cb);
+    vif.driver_cb.rst <= 1'b0;
+    repeat ($urandom_range(MIN, MAX)) @(vif.driver_cb);
   endtask
 
 endclass

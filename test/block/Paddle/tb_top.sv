@@ -29,7 +29,7 @@ module tb_top;
 
   initial begin
     uvm_config_db#(virtual paddle_if)::set(null, "*", "vif", dut_if);
-    uvm_config_db#(int)::set(null, "*", "SIDE", PADDLE_SIDE);
+    uvm_config_db#(bit)::set(null, "*", "SIDE", PADDLE_SIDE);
     run_test();
   end
 

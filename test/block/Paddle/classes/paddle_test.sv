@@ -4,6 +4,7 @@ class paddle_test extends uvm_test;
   paddle_env env;
   screen_sequence sc_seq;
   bit_sequence bt_seq;
+  reset_sequence rst_seq;
   virtual paddle_if vif;
 
   function new(string name = "paddle_test", uvm_component parent = null);
@@ -17,6 +18,8 @@ class paddle_test extends uvm_test;
       `uvm_fatal("TEST", "Did not get vif")
     bt_seq = bit_sequence::type_id::create("bit_sequence");
     bt_seq.randomize();
+    rst_seq = reset_sequence::type_id::create("reset_sequence");
+    rst_seq.randomize();
     sc_seq = screen_sequence::type_id::create("screen_sequence");
     sc_seq.randomize();
   endfunction
@@ -32,6 +35,7 @@ class paddle_test extends uvm_test;
     fork
       sc_seq.start(env.agent.sc_sequencer);
       bt_seq.start(env.agent.bt_sequencer);
+      rst_seq.start(env.agent.rst_sequencer);
     join
     phase.drop_objection(this);
   endtask

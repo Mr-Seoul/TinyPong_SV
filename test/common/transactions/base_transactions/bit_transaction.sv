@@ -1,11 +1,9 @@
 class bit_transaction extends uvm_sequence_item;
 
   rand bit in;
-  rand bit rst;
   bit out;
 
   constraint c1 { in dist {0:/80, 1:/20}; }
-  constraint c2 { rst dist {0:/98, 1:/2}; }
 
   `uvm_object_utils(bit_transaction)
 

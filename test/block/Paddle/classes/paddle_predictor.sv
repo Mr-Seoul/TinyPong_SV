@@ -15,7 +15,7 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
 
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(int)::get(this, "", "SIDE", SIDE))
+    if (!uvm_config_db#(bit)::get(this, "", "SIDE", SIDE))
       `uvm_fatal("PRD", "Could not get SIDE")
     paddle_x = 1'(SIDE) ? 640 - settings::paddleWallDist - settings::paddleWidth : settings::paddleWallDist + settings::paddleWidth;
     ap = new("ap", this);
@@ -27,7 +27,7 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
     int diff_x;
     paddle_transaction expected = paddle_transaction::type_id::create("expected");
 
-    if (trans.bt_trans.rst) begin
+    if (trans.rst_trans.rst) begin
       paddle_y = 240;
       paddle_velocity = 0;
     end
@@ -40,7 +40,7 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
     expected.inbound = ($bits(int)'(trans.sc_trans.screenY) >= y_min) & ($bits(int)'(trans.sc_trans.screenY) <= y_max ) & & (diff_x >= 0) & (diff_x <= settings::paddleWidth);
     expected.diffX = $bits(expected.diffX)'(diff_x);
     
-    if (!trans.bt_trans.rst && trans.sc_trans.screenDone) begin
+    if (!trans.rst_trans.rst && trans.sc_trans.screenDone) begin
       paddle_y += paddle_velocity;
       if (paddle_y < settings::paddleHeight) begin
         paddle_y = settings::paddleHeight;

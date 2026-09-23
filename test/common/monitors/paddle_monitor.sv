@@ -27,7 +27,7 @@ class paddle_monitor extends uvm_monitor;
       @(vif.monitor_cb);
       in_trans = screen_button_transaction::type_id::create("in trans");
       in_trans.bt_trans.in = vif.monitor_cb.in;
-      in_trans.bt_trans.rst = vif.monitor_cb.rst;
+      in_trans.rst_trans.rst = vif.monitor_cb.rst;
       in_trans.sc_trans.screenX = vif.monitor_cb.screenX;
       in_trans.sc_trans.screenY = vif.monitor_cb.screenY;
       in_trans.sc_trans.screenDone = vif.monitor_cb.screenDone;

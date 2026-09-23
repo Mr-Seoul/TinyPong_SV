@@ -11,6 +11,8 @@ class ball_agent extends uvm_agent;
   ball_coverage coverage_reporter;
   bit_sequencer bt_sequencer;
   single_bit_driver bt_driver;
+  reset_sequencer rst_sequencer;
+  reset_driver #(1, 10) rst_driver;
 
   function new(string name = "ball_agent", uvm_component parent = null);
     super.new(name, parent);
@@ -29,6 +31,8 @@ class ball_agent extends uvm_agent;
     right_paddle_driver = paddle_driver::type_id::create("right_paddle_driver", this);
     bt_sequencer = bit_sequencer::type_id::create("bit_sequencer", this);
     bt_driver = single_bit_driver::type_id::create("single_bit_driver", this);
+    rst_sequencer = reset_sequencer::type_id::create("reset_sequencer", this);
+    rst_driver = reset_driver #(1, 10)::type_id::create("reset_driver", this);
     monitor = ball_monitor::type_id::create("ball_monitor", this);
     coverage_reporter = ball_coverage::type_id::create("ball_coverage", this);
   endfunction
@@ -39,6 +43,7 @@ class ball_agent extends uvm_agent;
     left_paddle_driver.seq_item_port.connect(left_paddle_sequencer.seq_item_export);
     right_paddle_driver.seq_item_port.connect(right_paddle_sequencer.seq_item_export);
     bt_driver.seq_item_port.connect(bt_sequencer.seq_item_export);
+    rst_driver.seq_item_port.connect(rst_sequencer.seq_item_export);
     monitor.in_ap.connect(coverage_reporter.in_export);
     monitor.out_ap.connect(coverage_reporter.output_export);
   endfunction

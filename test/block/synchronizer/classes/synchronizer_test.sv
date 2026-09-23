@@ -4,6 +4,7 @@ class synchronizer_test extends uvm_test;
 
   synchronizer_env env;
   bit_sequence seq;
+  reset_sequence rst_seq;
   virtual synchronizer_if	vif;
 
   function new(string name = "synchronizer_test", uvm_component parent = null);
@@ -18,6 +19,8 @@ class synchronizer_test extends uvm_test;
     uvm_config_db#(virtual synchronizer_if)::set(this, "synchronizer_env.synchronizer_agent.*", "vif", vif);
     seq = bit_sequence::type_id::create("bit_sequence");
     seq.randomize();
+    rst_seq = reset_sequence::type_id::create("reset_sequence");
+    rst_seq.randomize();
   endfunction
 
   virtual task reset_phase(uvm_phase phase);
@@ -28,7 +31,10 @@ class synchronizer_test extends uvm_test;
 
   virtual task main_phase(uvm_phase phase);
     phase.raise_objection(this);
-    seq.start(env.agent.sequencer);
+    fork
+      seq.start(env.agent.sequencer);
+      rst_seq.start(env.agent.rst_sequencer);
+    join
     phase.drop_objection(this);
   endtask
 

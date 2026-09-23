@@ -4,6 +4,8 @@ class debouncer_agent extends uvm_agent;
 
   bit_sequencer sequencer;
   frame_bit_driver driver;
+  reset_sequencer rst_sequencer;
+  reset_driver #(100000, 600000) rst_driver;
   bit_monitor monitor;
   bit_coverage coverage_reporter;
 
@@ -15,6 +17,8 @@ class debouncer_agent extends uvm_agent;
     super.build_phase(phase);
     sequencer = bit_sequencer::type_id::create("bit_sequencer", this);
     driver = frame_bit_driver::type_id::create("frame_bit_driver", this);
+    rst_sequencer = reset_sequencer::type_id::create("reset_sequencer", this);
+    rst_driver = reset_driver #(100000, 600000)::type_id::create("reset_driver", this);
     monitor = bit_monitor::type_id::create("bit_monitor", this);
     coverage_reporter = bit_coverage::type_id::create("bit_coverage", this);
   endfunction
@@ -22,6 +26,7 @@ class debouncer_agent extends uvm_agent;
   virtual function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     driver.seq_item_port.connect(sequencer.seq_item_export);
+    rst_driver.seq_item_port.connect(rst_sequencer.seq_item_export);
     monitor.ap.connect(coverage_reporter.trans_export);
   endfunction
 

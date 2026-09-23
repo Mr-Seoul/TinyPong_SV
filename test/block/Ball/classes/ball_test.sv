@@ -6,6 +6,7 @@ class ball_test extends uvm_test;
   paddle_sequence left_paddle_seq;
   paddle_sequence right_paddle_seq;
   bit_sequence bt_seq;
+  reset_sequence rst_seq;
   virtual ball_if vif;
 
   function new(string name = "ball_test", uvm_component parent = null);
@@ -25,6 +26,8 @@ class ball_test extends uvm_test;
     right_paddle_seq.randomize();
     bt_seq = bit_sequence::type_id::create("bit_sequence");
     bt_seq.randomize();
+    rst_seq = reset_sequence::type_id::create("reset_sequence");
+    rst_seq.randomize();
   endfunction
 
   virtual task reset_phase(uvm_phase phase);
@@ -40,6 +43,7 @@ class ball_test extends uvm_test;
       left_paddle_seq.start(env.agent.left_paddle_sequencer);
       right_paddle_seq.start(env.agent.right_paddle_sequencer);
       bt_seq.start(env.agent.bt_sequencer);
+      rst_seq.start(env.agent.rst_sequencer);
     join
     phase.drop_objection(this);
   endtask

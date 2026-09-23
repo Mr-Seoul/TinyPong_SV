@@ -30,7 +30,6 @@ class single_bit_driver extends uvm_driver #(bit_transaction);
 
   virtual task drive_trans(bit_transaction trans);
     vif.driver_cb.in  <= trans.in;
-    vif.driver_cb.rst <= trans.rst;
     @(vif.driver_cb);
   endtask
 
