@@ -1,3 +1,6 @@
+`ifndef BALL_SV
+`define BALL_SV
+
 `include "rtl/Settings.sv"
 
 module ball
@@ -61,7 +64,7 @@ always_comb begin
     newDir = ballSpeedReg[1]^ballSpeedReg[0]^goingDownReg^goingRightReg;
 end
 
-always_ff @(posedge clk or negedge rst) begin
+always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         //Reset logic
         ballYReg <= 64;
@@ -107,3 +110,5 @@ always_comb begin
 end
 
 endmodule
+
+`endif

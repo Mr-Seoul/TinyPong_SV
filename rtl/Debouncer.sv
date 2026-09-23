@@ -1,3 +1,6 @@
+`ifndef DEBOUNCER_SV
+`define DEBOUNCER_SV
+
 module debouncer
 #(
     parameter SIZE
@@ -37,3 +40,5 @@ always_ff @(posedge clk or posedge rst) begin
 end
 
 endmodule
+
+`endif

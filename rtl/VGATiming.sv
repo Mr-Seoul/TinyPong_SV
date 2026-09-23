@@ -1,3 +1,6 @@
+`ifndef VGA_TIMING_SV
+`define VGA_TIMING_SV
+
 module VGATiming
 (
     input logic signed [10:0] screenX,
@@ -20,3 +23,5 @@ begin
 end
 
 endmodule
+
+`endif

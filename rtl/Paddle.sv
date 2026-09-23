@@ -1,3 +1,6 @@
+`ifndef PADDLE_SV
+`define PADDLE_SV
+
 `include "rtl/Settings.sv"
 
 module paddle
@@ -77,3 +80,5 @@ always_ff @(posedge clk or posedge rst) begin
 end
 
 endmodule
+
+`endif

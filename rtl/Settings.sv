@@ -1,3 +1,5 @@
+`ifndef SETTINGS_SV
+`define SETTINGS_SV
 
 package settings;
 
@@ -10,3 +12,5 @@ package settings;
     parameter ballSpeed = 2;
 
 endpackage
+
+`endif

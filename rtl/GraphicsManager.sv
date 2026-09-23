@@ -1,3 +1,6 @@
+`ifndef GRAPHICS_MANAGER_SV
+`define GRAPHICS_MANAGER_SV
+
 `include "rtl/GameManager.sv"
 
 module graphicsManager
@@ -48,3 +51,5 @@ always_comb begin
 end
 
 endmodule
+
+`endif

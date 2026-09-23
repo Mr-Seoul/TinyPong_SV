@@ -1,3 +1,6 @@
+`ifndef SYNCHRONIZER_SV
+`define SYNCHRONIZER_SV
+
 module synchronizer
 #(
     parameter DEFAULT = 0
@@ -27,3 +30,5 @@ always_ff @(posedge clk or posedge rst) begin
 end
 
 endmodule
+
+`endif

@@ -1,3 +1,6 @@
+`ifndef GAME_MANAGER_SV
+`define GAME_MANAGER_SV
+
 `include "rtl/Ball.sv"
 `include "rtl/Paddle.sv"
 `include "rtl/Settings.sv"
@@ -133,3 +136,5 @@ always_ff @(posedge clk or posedge rst) begin
 end
 
 endmodule
+
+`endif
