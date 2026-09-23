@@ -22,7 +22,7 @@ module paddle
 );
 
 logic signed [10:0] paddleYReg = 240;
-logic signed [10:0] paddleXReg = (PADDLE_SIDE) ? $bits(paddleXReg)'(settings::paddleWallDist + settings::paddleWidth) : $bits(paddleXReg)'(640 - settings::paddleWallDist - settings::paddleWidth);
+logic signed [10:0] paddleX = (PADDLE_SIDE) ? $bits(paddleX)'(640 - settings::paddleWallDist - settings::paddleWidth) : $bits(paddleX)'(settings::paddleWallDist + settings::paddleWidth);
 
 logic signed [5:0] velocityReg = 0;
 logic signed [10:0] newYPos;
@@ -30,46 +30,48 @@ logic signed [10:0] newYPos;
 logic inXSquare;
 logic inYSquare;
 
+logic [10:0] tempDiffX;
+
 always_comb begin
     //Paddle logic
-    newYPos = paddleYReg + velocityReg;
+    newYPos = $bits(newYPos)'(paddleYReg + velocityReg);
 
     //For dithering logic
-    diffX = (PADDLE_SIDE) ? paddleXReg - screenX : screenX - paddleXReg;
+    tempDiffX = (PADDLE_SIDE) ? $bits(tempDiffX)'(paddleX - screenX) :$bits(tempDiffX)'(screenX - paddleX);
 
     //Bound detection
-    inXSquare = (diffX <= $bits(diffX)'(settings::paddleWidth));
-    inYSquare = (screenY <= $bits(screenY)'(settings::paddleHeight)) && (screenY >= paddleYReg - $bits(screenY)'(settings::paddleHeight));
+    inXSquare = (tempDiffX <= $bits(tempDiffX)'(settings::paddleWidth)); //tempDiffX is unsigned, so negative values become very large
+    inYSquare = (screenY <= $bits(screenY)'(paddleYReg)) && (screenY >= paddleYReg - $bits(screenY)'(settings::paddleHeight));
     inbound = inXSquare && inYSquare;
 
     //Output
+    diffX = $bits(diffX)'(tempDiffX);
     paddleY = paddleYReg;
 end
 
 always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         paddleYReg <= 240;
-        paddleXReg <= (PADDLE_SIDE) ? $bits(paddleXReg)'(settings::paddleWallDist + settings::paddleWidth) : $bits(paddleXReg)'(640 - settings::paddleWallDist - settings::paddleWidth);
         velocityReg <= 0;
     end else begin
-        //Gravity Logic
-        if (buttonUp) begin
-            velocityReg <= -1*$bits(velocityReg)'(settings::paddleJumpSpeed);
-        end else if (paddleYReg <= $bits(paddleYReg)'(settings::paddleHeight)) begin
-            velocityReg <= $bits(velocityReg)'(settings::paddleGravity);
-        end else if (paddleYReg >= 480) begin
-            velocityReg <= 0;
-        end else begin
+        if (updateLogic) begin
+            //Gravity Logic
             velocityReg <= velocityReg + $bits(velocityReg)'(settings::paddleGravity);
-        end
+            if (buttonUp) begin
+                velocityReg <= -1*$bits(velocityReg)'(settings::paddleJumpSpeed);
+            end else if (paddleYReg <= $bits(paddleYReg)'(settings::paddleHeight)) begin
+                velocityReg <= $bits(velocityReg)'(settings::paddleGravity);
+            end else if (paddleYReg >= 480) begin
+                velocityReg <= 0;
+            end
 
-        //Paddle movement logic
-        if (newYPos < $bits(newYPos)'(settings::paddleHeight)) begin
-            paddleYReg <= $bits(paddleYReg)'(settings::paddleHeight);
-        end else if (newYPos > 480) begin
-            paddleYReg <= 480;
-        end else begin
+            //Paddle movement logic
             paddleYReg <= newYPos;
+            if (newYPos < $bits(newYPos)'(settings::paddleHeight)) begin
+                paddleYReg <= $bits(paddleYReg)'(settings::paddleHeight);
+            end else if (newYPos >= 480) begin
+                paddleYReg <= 480;
+            end 
         end
     end
 end

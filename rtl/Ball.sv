@@ -72,8 +72,8 @@ always_ff @(posedge clk or negedge rst) begin
     end else begin
         if (updateLogic) begin
             //Update position
-            ballYReg <= ballYReg + speedY;
-            ballXReg <= ballXReg + speedX;
+            ballYReg <= ballYReg + $bits(ballYReg)'(speedY);
+            ballXReg <= ballXReg + $bits(ballYReg)'(speedX);
 
             //Bouncing off paddles
             if (!goingRightReg && ballXReg >= LeftPaddleLeftBound && ballXReg <= LeftPaddleRightBound && ballYReg >= LeftPaddleTopBound && ballYReg <= LeftPaddleBottomBound) begin
@@ -96,8 +96,8 @@ logic inSquare;
 
 always_comb begin
     //Check if screenpixel currently is inside the ball
-    inSquareX = (screenX >= ballXReg && screenX <= screenX + $bits(screenX)'(2*settings::ballRadius));
-    inSquareY = (screenY >= ballYReg && screenY <= screenY + $bits(screenY)'(2*settings::ballRadius));
+    inSquareX = (screenX >= ballXReg && screenX <= ballXReg + $bits(screenX)'(2*settings::ballRadius));
+    inSquareY = (screenY >= ballYReg && screenY <= ballYReg + $bits(screenY)'(2*settings::ballRadius));
     inSquare = inSquareX && inSquareY;
 
     //Output logic
