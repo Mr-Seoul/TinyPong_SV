@@ -2,9 +2,7 @@ interface ball_if (
     input logic clk
 );
 
-  logic in;//Not used, added for driver reuse
   logic rst;
-
   logic screenDone; //Not the same as the ball interface, renamed to be consistant with screen driver
   
 
@@ -21,12 +19,12 @@ interface ball_if (
 
     clocking driver_cb @(posedge clk);
         input inbound, outLeftBound, outRightBound;
-        output screenX, screenY, screenDone, paddleLeftY, paddleRightY, in;
+        output screenX, screenY, screenDone, paddleLeftY, paddleRightY;
         inout rst;
     endclocking
 
     clocking monitor_cb @(posedge clk);
-        input rst, screenX, screenY, screenDone, paddleLeftY, paddleRightY, inbound, outLeftBound, outRightBound,in;
+        input rst, screenX, screenY, screenDone, paddleLeftY, paddleRightY, inbound, outLeftBound, outRightBound;
     endclocking
 
 endinterface

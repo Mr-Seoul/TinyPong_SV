@@ -5,7 +5,6 @@ class ball_test extends uvm_test;
   screen_sequence sc_seq;
   paddle_sequence left_paddle_seq;
   paddle_sequence right_paddle_seq;
-  bit_sequence bt_seq;
   reset_sequence rst_seq;
   virtual ball_if vif;
 
@@ -24,8 +23,6 @@ class ball_test extends uvm_test;
     left_paddle_seq.randomize();
     right_paddle_seq = paddle_sequence::type_id::create("right_paddle_sequence");
     right_paddle_seq.randomize();
-    bt_seq = bit_sequence::type_id::create("bit_sequence");
-    bt_seq.randomize();
     rst_seq = reset_sequence::type_id::create("reset_sequence");
     rst_seq.randomize();
   endfunction
@@ -42,7 +39,6 @@ class ball_test extends uvm_test;
       sc_seq.start(env.agent.sc_sequencer);
       left_paddle_seq.start(env.agent.left_paddle_sequencer);
       right_paddle_seq.start(env.agent.right_paddle_sequencer);
-      bt_seq.start(env.agent.bt_sequencer);
       rst_seq.start(env.agent.rst_sequencer);
     join
     phase.drop_objection(this);
