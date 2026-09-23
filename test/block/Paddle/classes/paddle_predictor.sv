@@ -44,15 +44,15 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
       paddle_y += paddle_velocity;
       if (paddle_y < settings::paddleHeight) begin
         paddle_y = settings::paddleHeight;
-      end else if (paddle_y >= 479) begin
-        paddle_y = 479;
+      end else if (paddle_y >= 480) begin
+        paddle_y = 480;
       end
       paddle_velocity += settings::paddleGravity;
       if (trans.bt_trans.in) begin
         paddle_velocity = -settings::paddleJumpSpeed;
       end else if (paddle_y <= settings::paddleHeight) begin
         paddle_velocity = settings::paddleGravity;
-      end else if (paddle_y >= 479) begin
+      end else if (paddle_y >= 480) begin
         paddle_velocity = 0;
       end
     end
