@@ -43,29 +43,29 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
     expected.outRightBound = ball_x > 640;
 
     if (!trans.rst_trans.rst && trans.sc_trans.screenDone) begin
-      ball_x += going_right ? ball_speed : -ball_speed;
-      ball_y += going_down ? ball_speed : -ball_speed;
-
-      left_paddle_top = $bits(int)'(trans.pd_l_trans.paddleY) + settings::paddleHeight - settings::ballRadius;
+      left_paddle_top = $bits(int)'(trans.pd_l_trans.paddleY) - settings::paddleHeight - settings::ballRadius;
       left_paddle_bottom = $bits(int)'(trans.pd_l_trans.paddleY) + settings::ballRadius;
       left_paddle_left = settings::paddleWallDist - settings::paddleWidth;
       left_paddle_right = settings::paddleWallDist + 2*settings::paddleWidth;
 
-      right_paddle_top = $bits(int)'(trans.pd_r_trans.paddleY) + settings::paddleHeight - settings::ballRadius;
+      right_paddle_top = $bits(int)'(trans.pd_r_trans.paddleY) - settings::paddleHeight - settings::ballRadius;
       right_paddle_bottom = $bits(int)'(trans.pd_r_trans.paddleY) + settings::ballRadius;
       right_paddle_left = 640 - settings::paddleWallDist - settings::paddleWidth - 2*settings::ballRadius;
       right_paddle_right = 640 - settings::paddleWallDist;
 
-      in_left_paddle = ( $bits(int)'(trans.pd_l_trans.paddleY) >= left_paddle_left & $bits(int)'(trans.pd_l_trans.paddleY) <= left_paddle_right) & ( $bits(int)'(trans.pd_l_trans.paddleY) >= left_paddle_bottom & $bits(int)'(trans.pd_l_trans.paddleY) <= left_paddle_top);
-      in_right_paddle = ( $bits(int)'(trans.pd_r_trans.paddleY) >= right_paddle_left & $bits(int)'(trans.pd_r_trans.paddleY) <= right_paddle_right) & ( $bits(int)'(trans.pd_r_trans.paddleY) >= right_paddle_bottom & $bits(int)'(trans.pd_r_trans.paddleY) <= right_paddle_top);
-      
+      in_left_paddle = (ball_x >= left_paddle_left & ball_x <= left_paddle_right) & (ball_y >= left_paddle_top & ball_y <= left_paddle_bottom);
+      in_right_paddle = (ball_x >= right_paddle_left & ball_x <= right_paddle_right) & (ball_y >= right_paddle_top & ball_y <= right_paddle_bottom);
+
       new_dir = ball_speed[1]^ball_speed[0]^going_down^going_right;
+
+      ball_x += going_right ? ball_speed : -ball_speed;
+      ball_y += going_down ? ball_speed : -ball_speed;
 
       if (in_left_paddle & !going_right) begin
         going_right = 1;
         going_down = new_dir;
       end else if (in_right_paddle & going_right) begin
-        going_right = 1;
+        going_right = 0;
         going_down = new_dir;
         ball_speed += 1;
         if (ball_speed > 31) begin
