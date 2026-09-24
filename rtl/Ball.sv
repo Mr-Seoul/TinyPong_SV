@@ -54,10 +54,10 @@ always_comb begin
     speedY = goingDownReg ? ballSpeedReg : -ballSpeedReg;
 
     //Paddle bounds
-    LeftPaddleTopBound = $bits(LeftPaddleLeftBound)'(settings::paddleHeight - settings::ballRadius) + paddleLeftY;
+    LeftPaddleTopBound = $bits(LeftPaddleLeftBound)'(-settings::paddleHeight - settings::ballRadius) + paddleLeftY;
     LeftPaddleBottomBound = $bits(LeftPaddleLeftBound)'(settings::ballRadius) + paddleLeftY;
 
-    RightPaddleTopBound = $bits(LeftPaddleLeftBound)'(settings::paddleHeight - settings::ballRadius) + paddleRightY;
+    RightPaddleTopBound = $bits(LeftPaddleLeftBound)'(-settings::paddleHeight - settings::ballRadius) + paddleRightY;
     RightPaddleBottomBound = $bits(LeftPaddleLeftBound)'(settings::ballRadius) + paddleRightY;
 
     //Somewhat chaotic new direction logic
@@ -86,7 +86,7 @@ always_ff @(posedge clk or posedge rst) begin
                 goingRightReg <= 0;
                 goingDownReg <= newDir;
                 //Speed up ball (unless it overflows)
-                ballSpeedReg <= (ballSpeedReg < (2<<5 -1)) ? ballSpeedReg + 1 : ballSpeedReg;
+                ballSpeedReg <= (ballSpeedReg < (1<<5) -1) ? ballSpeedReg + 1 : ballSpeedReg;
             end
         end
     end
