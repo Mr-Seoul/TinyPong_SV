@@ -1,0 +1,35 @@
+package game_manager_pkg;
+
+  import uvm_pkg::*;
+  `include "uvm_macros.svh"
+
+  `include "common/transactions/base_transactions/bit_transaction.sv"
+  `include "common/transactions/base_transactions/reset_transaction.sv"
+  `include "common/transactions/base_transactions/screen_transaction.sv"
+  `include "common/transactions/bundle_transactions/screen_button_transaction.sv"
+  `include "common/transactions/base_transactions/paddle_transaction.sv"
+  `include "common/transactions/bundle_transactions/screen_button_paddle_transaction.sv"
+  `include "common/transactions/base_transactions/ball_transaction.sv"
+  `include "common/transactions/bundle_transactions/screen_buttons_transaction.sv"
+  `include "common/transactions/base_transactions/vga_transaction.sv"
+  `include "common/transactions/bundle_transactions/game_transaction.sv"
+  `include "common/sequences/bit_sequence.sv"
+  `include "common/sequences/reset_sequence.sv"
+  `include "common/sequences/screen_sequence.sv"
+  `include "common/sequencers/bit_sequencer.sv"
+  `include "common/sequencers/reset_sequencer.sv"
+  `include "common/sequencers/screen_sequencer.sv"
+  `include "common/drivers/screen_driver.sv"
+  `include "common/drivers/single_bit_driver.sv"
+  `include "common/drivers/reset_driver.sv"
+  `include "common/monitors/game_manager_monitor.sv"
+  `include "common/coverage/game_manager_coverage.sv"
+  `include "classes/game_manager_agent.sv"
+  `include "block/Paddle/classes/paddle_predictor.sv"
+  `include "block/Ball/classes/ball_predictor.sv"
+  `include "classes/game_manager_predictor.sv"
+  `include "classes/game_manager_scoreboard.sv"
+  `include "classes/game_manager_env.sv"
+  `include "classes/game_manager_test.sv"
+
+endpackage
