@@ -38,7 +38,7 @@ class paddle_coverage extends uvm_component;
       bins middle = { [settings::paddleWallDist+settings::paddleWidth+1:640-settings::paddleWallDist-settings::paddleWidth-1] };
       bins right_paddle = { [640-settings::paddleWallDist-settings::paddleWidth:640-settings::paddleWallDist] };
       bins right = { [640-settings::paddleWallDist+1:639] };
-      bins out_of_bounds = { [640::paddleWallDist+1:799] };
+      bins out_of_bounds = { [640:799] };
     }
 
     cp_screenDone: coverpoint screenDone {
