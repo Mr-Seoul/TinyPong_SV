@@ -104,8 +104,8 @@ graphicsManager gpu (
 
     .screenDone(screenDone),
 
-    .input1(synchronizedInput1),
-    .input2(synchronizedInput2)
+    .input1(debouncedInput1),
+    .input2(debouncedInput2)
 );
 
 //Timing
@@ -119,7 +119,7 @@ VGATiming timingModule (
 
 //Counter logic
 always_comb begin
-    screenDone = (screenYReg == 524);
+    screenDone = (screenXReg == 799 && screenYReg == 524);
 
     //Output
     outR = rReg;
