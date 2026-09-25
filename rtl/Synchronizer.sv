@@ -29,6 +29,12 @@ always_ff @(posedge clk or posedge rst) begin
     end
 end
 
+assert property (@(posedge clk) disable iff (rst) in |-> ##2 out)
+    else $error("High inputs not synchronized");
+
+assert property (@(posedge clk) disable iff (rst) !in |-> ##2 !out)
+    else $error("Low inputs not synchronized");
+
 endmodule
 
 `endif

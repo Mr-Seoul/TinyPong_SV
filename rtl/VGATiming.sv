@@ -20,7 +20,15 @@ begin
     if (screenY > 489 && screenY < 492) begin
         vsync = 0;
     end 
+    
+    assert (screenX >= 0 && screenX < 800)
+        else $error("X index violation");
+    assert (screenY >= 0 && screenY < 525) 
+        else $error("Y index violation");
+
 end
+
+
 
 endmodule
 
