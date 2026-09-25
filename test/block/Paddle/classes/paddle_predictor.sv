@@ -4,9 +4,7 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
   uvm_analysis_port #(paddle_transaction) ap;
 
   bit SIDE = 0;
-  int paddle_y = 240;
-  int paddle_x;
-  int paddle_velocity = 0;
+  int paddle_y = 240, paddle_x, paddle_velocity = 0;
   int old_y = 240;
 
   function new(string name = "paddle_predictor", uvm_component parent = null);
@@ -25,12 +23,14 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
     int y_min, y_max, diff_x;
     paddle_transaction expected = paddle_transaction::type_id::create("expected");
 
+    //Handle reset
     if (trans.rst_trans.rst) begin
       paddle_y = 240;
       paddle_velocity = 0;
       old_y = 240;
     end
 
+    //Compute results
     y_min = paddle_y - settings::paddleHeight;
     y_max = paddle_y;
     diff_x = SIDE ? paddle_x - $bits(int)'(trans.sc_trans.screenX) : $bits(int)'(trans.sc_trans.screenX) - paddle_x;
@@ -39,7 +39,9 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
     expected.inbound = ($bits(int)'(trans.sc_trans.screenY) >= y_min) & ($bits(int)'(trans.sc_trans.screenY) <= y_max ) & & (diff_x >= 0) & (diff_x <= settings::paddleWidth);
     expected.diffX = $bits(expected.diffX)'(diff_x);
     
+    //Update registers
     if (!trans.rst_trans.rst && trans.sc_trans.screenDone) begin
+      //Position
       old_y = paddle_y;
       paddle_y += paddle_velocity;
       if (paddle_y < settings::paddleHeight) begin
@@ -47,6 +49,7 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
       end else if (paddle_y >= 480) begin
         paddle_y = 480;
       end
+      //Velocity
       paddle_velocity += settings::paddleGravity;
       if (trans.bt_trans.in) begin
         paddle_velocity = -settings::paddleJumpSpeed;

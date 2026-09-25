@@ -21,21 +21,21 @@ class game_manager_predictor extends uvm_subscriber #(game_transaction);
     screenY = $bits(int)'(trans.sb_trans.sc_trans.screenY);
     dithering = $bits(int)'({ 1'b0, screenX[0]^screenY[0], screenY[1], screenX[1]^screenY[1], screenY[0]});
 
-    if (trans.pd_l_trans.inbound) begin
+    if (trans.pd_l_trans.inbound) begin //Left paddle colour
       dithered = trans.pd_l_trans.diffX <= 5'(dithering);
       expected.r = { dithered, 1'b1};
       expected.g = 0;
       expected.b = 0;
-    end else if (trans.pd_r_trans.inbound) begin
+    end else if (trans.pd_r_trans.inbound) begin //Right paddle colour
       dithered = trans.pd_r_trans.diffX <= 5'(dithering);
       expected.r = 0;
       expected.g = { dithered, 1'b1};
       expected.b = 0;
-    end else if (trans.bl_trans.inbound) begin
+    end else if (trans.bl_trans.inbound) begin //Ball colour
       expected.r = 0;
       expected.g = 2'b11;
       expected.b = 2'b11;
-    end else begin
+    end else begin //Background colour
       expected.r = { 1'b0 , (screenX[5] ^ screenY[5]) ^ (screenX[2] ^ screenY[2]) };
       expected.g = { 1'b0 , (screenX[4] ^ screenY[4]) ^ (screenX[1] ^ screenY[1]) };
       expected.b = { 1'b0 , (screenX[3] ^ screenY[3]) ^ (screenX[0] ^ screenY[0]) };

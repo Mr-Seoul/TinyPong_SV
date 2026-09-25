@@ -3,11 +3,8 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
   `uvm_component_utils(ball_predictor)
   uvm_analysis_port #(ball_transaction) ap;
 
-  int ball_x = 320;
-  int ball_y = 64;
-  int ball_speed = settings::ballSpeed;
-  bit going_down = 1;
-  bit going_right = 1;
+  int ball_x = 320, ball_y = 64, ball_speed = settings::ballSpeed;
+  bit going_down = 1, going_right = 1;
 
   function new(string name = "ball_predictor", uvm_component parent = null);
     super.new(name, parent);
@@ -27,7 +24,7 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
 
     ball_transaction expected = ball_transaction::type_id::create("expected");
 
-    if (trans.rst_trans.rst) begin
+    if (trans.rst_trans.rst) begin //Handle reset
       ball_x = 320;
       ball_y = 64;
       ball_speed = settings::ballSpeed;
@@ -35,6 +32,7 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
       going_right = 1;
     end
 
+    //Compute results
     in_ball_x = $bits(int)'(trans.sc_trans.screenX) >= ball_x & $bits(int)'(trans.sc_trans.screenX) <= ball_x + 2*settings::ballRadius;
     in_ball_y = $bits(int)'(trans.sc_trans.screenY) >= ball_y & $bits(int)'(trans.sc_trans.screenY) <= ball_y + 2*settings::ballRadius;
 
@@ -43,24 +41,29 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
     expected.outRightBound = ball_x > 640;
 
     if (!trans.rst_trans.rst && trans.sc_trans.screenDone) begin
+      //Compute all left bounds
       left_paddle_top = $bits(int)'(trans.pd_l_trans.paddleY) - settings::paddleHeight - settings::ballRadius;
       left_paddle_bottom = $bits(int)'(trans.pd_l_trans.paddleY) + settings::ballRadius;
       left_paddle_left = settings::paddleWallDist - settings::paddleWidth;
       left_paddle_right = settings::paddleWallDist + 2*settings::paddleWidth;
 
+      //Compute all right bounds
       right_paddle_top = $bits(int)'(trans.pd_r_trans.paddleY) - settings::paddleHeight - settings::ballRadius;
       right_paddle_bottom = $bits(int)'(trans.pd_r_trans.paddleY) + settings::ballRadius;
       right_paddle_left = 640 - settings::paddleWallDist - settings::paddleWidth - 2*settings::ballRadius;
       right_paddle_right = 640 - settings::paddleWallDist;
 
+      //paddle inbound logic for bouncing
       in_left_paddle = (ball_x >= left_paddle_left & ball_x <= left_paddle_right) & (ball_y >= left_paddle_top & ball_y <= left_paddle_bottom);
       in_right_paddle = (ball_x >= right_paddle_left & ball_x <= right_paddle_right) & (ball_y >= right_paddle_top & ball_y <= right_paddle_bottom);
 
       new_dir = ball_speed[1]^ball_speed[0]^going_down^going_right;
 
+      //update position
       ball_x += going_right ? ball_speed : -ball_speed;
       ball_y += going_down ? ball_speed : -ball_speed;
 
+      //Bouncing logic
       if (in_left_paddle & !going_right) begin
         going_right = 1;
         going_down = new_dir;

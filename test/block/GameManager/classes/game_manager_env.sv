@@ -54,16 +54,20 @@ class game_manager_env extends uvm_env;
 
     forever begin
       screen_fifo.get(screen_trans);
+
+      //Handle reset (gameManager can reset the sub blocks, so we need to do this first)
       reset_all = screen_trans.rst_trans.rst || game_over;
       game_trans = game_transaction::type_id::create("game");
       game_trans.sb_trans = screen_trans;
       game_trans.game_over = game_over;
 
+      //Handle paddle inputs (ball relies on paddle positions)
       left_paddle_predictor.write(paddle_in_trans(screen_trans, screen_trans.bt1_trans, reset_all));
       right_paddle_predictor.write(paddle_in_trans(screen_trans, screen_trans.bt2_trans, reset_all));
       left_paddle_fifo.get(game_trans.pd_l_trans);
       right_paddle_fifo.get(game_trans.pd_r_trans);
 
+      //Handle ball prediction
       ball_in_trans = screen_button_paddle_transaction::type_id::create("ball in");
       ball_in_trans.sc_trans = screen_trans.sc_trans;
       ball_in_trans.pd_l_trans = game_trans.pd_l_trans;
@@ -72,16 +76,19 @@ class game_manager_env extends uvm_env;
       pong_predictor.write(ball_in_trans);
       ball_fifo.get(game_trans.bl_trans);
 
+      //Update game_over and send game output to coverage reporter/scoreboard
       game_over = !screen_trans.rst_trans.rst && (game_trans.bl_trans.outLeftBound || game_trans.bl_trans.outRightBound);
       game_ap.write(game_trans);
     end
   endtask
 
-  function screen_button_transaction paddle_in_trans(screen_buttons_transaction screen_trans, bit_transaction button_trans, bit rst);
-    paddle_in_trans = screen_button_transaction::type_id::create("paddle in");
-    paddle_in_trans.sc_trans = screen_trans.sc_trans;
-    paddle_in_trans.bt_trans = button_trans;
-    paddle_in_trans.rst_trans.rst = rst;
+  //Sets transaction for paddle prediction
+  function screen_button_transaction paddle_trans(screen_buttons_transaction screen_trans, bit_transaction button_trans, bit rst);
+    screen_button_transaction trans = screen_button_transaction::type_id::create("paddle in");
+    trans.sc_trans = screen_trans.sc_trans;
+    trans.bt_trans = button_trans;
+    trans.rst_trans.rst = rst;
+    return trans;
   endfunction
 
 endclass

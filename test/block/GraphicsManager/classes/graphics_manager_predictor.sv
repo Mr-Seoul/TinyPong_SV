@@ -10,8 +10,10 @@ class graphics_manager_predictor extends game_manager_predictor;
     vga_transaction expected;
 
     if ($bits(int)'(trans.sb_trans.sc_trans.screenX) < 640 && $bits(int)'(trans.sb_trans.sc_trans.screenY) < 480) begin
+      //If in bounds, get regular colour output
       super.write(trans);
     end else begin
+      //If out of bounds, no colour output
       expected = vga_transaction::type_id::create("expected");
       expected.r = 2'b0;
       expected.g = 2'b0;

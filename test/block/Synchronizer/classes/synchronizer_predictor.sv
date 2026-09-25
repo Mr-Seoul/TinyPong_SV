@@ -17,10 +17,15 @@ class synchronizer_predictor extends uvm_subscriber #(bit_rst_transaction);
 
   virtual function void write(bit_rst_transaction trans);
     bit_transaction expected = bit_transaction::type_id::create("expected");
-
-    if (trans.rst_trans.rst) stages = {DEFAULT, DEFAULT};
+    //Handle reset
+    if (trans.rst_trans.rst) begin
+      stages = {DEFAULT, DEFAULT};
+    end
     expected.out = stages[1];
-    if (!trans.rst_trans.rst) stages = {stages[0], trans.bt_trans.in};
+    //Update sync pipeline
+    if (!trans.rst_trans.rst) begin
+      stages = {stages[0], trans.bt_trans.in};
+    end
 
     ap.write(expected);
   endfunction

@@ -30,13 +30,13 @@ class frame_bit_driver extends uvm_driver #(bit_transaction);
   endtask
 
   virtual task drive_trans(bit_transaction trans);
-    int stable_cycles = (1 << 16) + 4;
+    int stable_cycles = (1 << 16) + 4; //Cycles needed for debouncer
 
     repeat (420000 - stable_cycles) begin
-      vif.driver_cb.in  <= 1'($urandom_range(0, 1));
+      vif.driver_cb.in  <= 1'($urandom_range(0, 1)); //Simulate mechanical noise
       @(vif.driver_cb);
     end
-    repeat (stable_cycles) begin
+    repeat (stable_cycles) begin //Stable input that should be picked up
       vif.driver_cb.in  <= trans.in;
       @(vif.driver_cb);
     end

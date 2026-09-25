@@ -32,8 +32,11 @@ class paddle_driver extends uvm_driver #(paddle_transaction);
   endtask
 
   virtual task drive_trans(paddle_transaction trans);
-    if (SIDE) vif.driver_cb.paddleRightY <= trans.paddleY;
-    else vif.driver_cb.paddleLeftY <= trans.paddleY;
+    if (SIDE) begin //Right paddle
+      vif.driver_cb.paddleRightY <= trans.paddleY;
+    end else begin //Left paddle
+      vif.driver_cb.paddleLeftY <= trans.paddleY;
+    end
     @(vif.driver_cb);
   endtask
 

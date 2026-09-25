@@ -32,7 +32,7 @@ class reset_driver #(int MIN = 1, int MAX = 10) extends uvm_driver #(reset_trans
     vif.driver_cb.rst <= trans.rst;
     @(vif.driver_cb);
     vif.driver_cb.rst <= 1'b0;
-    repeat ($urandom_range(MIN, MAX)) @(vif.driver_cb);
+    repeat ($urandom_range(MIN, MAX)) @(vif.driver_cb); //Wait a while so resets are infrequent
   endtask
 
 endclass
