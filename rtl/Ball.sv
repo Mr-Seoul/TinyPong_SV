@@ -77,6 +77,13 @@ always_ff @(posedge clk or posedge rst) begin
             //Update position
             ballYReg <= ballYReg + $bits(ballYReg)'(speedY);
             ballXReg <= ballXReg + $bits(ballYReg)'(speedX);
+            
+            //Bounce off walls, yes it will clip a bit, but clamping requires more gates
+            if (ballYReg > 480 - 2*settings::ballRadius) begin
+                goingDownReg <= 0;
+            end else if (ballYReg < 0) begin
+                goingDownReg <= 1;
+            end
 
             //Bouncing off paddles
             if (!goingRightReg && ballXReg >= LeftPaddleLeftBound && ballXReg <= LeftPaddleRightBound && ballYReg >= LeftPaddleTopBound && ballYReg <= LeftPaddleBottomBound) begin

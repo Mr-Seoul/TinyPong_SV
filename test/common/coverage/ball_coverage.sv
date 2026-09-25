@@ -1,15 +1,17 @@
 `uvm_analysis_imp_decl(_in)
 `uvm_analysis_imp_decl(_out)
+`uvm_analysis_imp_decl(_predictor)
 
 class ball_coverage extends uvm_component;
   `uvm_component_utils(ball_coverage)
 
   uvm_analysis_imp_in #(screen_button_paddle_transaction, ball_coverage) in_export;
   uvm_analysis_imp_out #(ball_transaction, ball_coverage) output_export;
+  uvm_analysis_imp_predictor #(ball_transaction, ball_coverage) predictor_export;
 
   real in_sc_coverage;
-  real in_paddle_coverage;
   real out_coverage;
+  real bounce_coverage;
 
   covergroup in_sc_cg with function sample(bit screenDone);
     option.per_instance = 1;
@@ -21,6 +23,21 @@ class ball_coverage extends uvm_component;
       bins zero_to_one = ( 0 => 1 );
       bins one_to_zero = ( 1 => 0 );
       bins one_to_one = ( 1 => 1 );
+    }
+
+  endgroup
+
+  covergroup bounce_cg with function sample(bit goingRight, bit goingDown);
+    option.per_instance = 1;
+
+    cp_h_bounce: coverpoint goingRight {
+      bins left_to_right  = ( 0 => 1 );
+      bins right_to_left  = ( 1 => 0 );
+    }
+
+    cp_v_bounce: coverpoint goingDown {
+      bins up_to_down  = ( 0 => 1 );
+      bins down_to_up  = ( 1 => 0 );
     }
 
   endgroup
@@ -49,8 +66,10 @@ class ball_coverage extends uvm_component;
     super.new(name, parent);
     in_sc_cg = new();
     out_cg = new();
+    bounce_cg = new();
     in_export = new("in_export", this);
     output_export = new("output_export", this);
+    predictor_export = new("predictor_export", this);
   endfunction
 
   virtual function void write_in(screen_button_paddle_transaction trans);
@@ -61,15 +80,21 @@ class ball_coverage extends uvm_component;
     out_cg.sample(trans.inbound, trans.outLeftBound, trans.outRightBound);
   endfunction
 
+  virtual function void write_predictor(ball_transaction trans);
+    bounce_cg.sample(trans.goingRight, trans.goingDown);
+  endfunction
+
   virtual function void extract_phase(uvm_phase phase);
     super.extract_phase(phase);
     in_sc_coverage = in_sc_cg.get_inst_coverage();
     out_coverage = out_cg.get_inst_coverage();
+    bounce_coverage = bounce_cg.get_inst_coverage();
   endfunction
 
   virtual function void report_phase(uvm_phase phase);
     super.report_phase(phase);
     `uvm_info("COV_REPORT", $sformatf("screen index and update coverage: %0f", in_sc_coverage), UVM_LOW)
     `uvm_info("COV_REPORT", $sformatf("out coverage: %0f", out_coverage), UVM_LOW)
+    `uvm_info("COV_REPORT", $sformatf("bounce coverage: %0f", bounce_coverage), UVM_LOW)
   endfunction
 endclass

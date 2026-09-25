@@ -3,6 +3,8 @@ class ball_transaction extends uvm_sequence_item;
   bit inbound;
   bit outLeftBound;
   bit outRightBound;
+  bit goingRight;
+  bit goingDown;
 
   `uvm_object_utils(ball_transaction)
 
@@ -18,6 +20,8 @@ class ball_transaction extends uvm_sequence_item;
     this.inbound = ext_transaction.inbound;
     this.outLeftBound = ext_transaction.outLeftBound;
     this.outRightBound = ext_transaction.outRightBound;
+    this.goingRight = ext_transaction.goingRight;
+    this.goingDown = ext_transaction.goingDown;
   endfunction
 
   virtual function bit do_compare(uvm_object rhs, uvm_comparer comparer);

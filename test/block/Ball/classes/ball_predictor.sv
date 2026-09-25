@@ -3,7 +3,7 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
   `uvm_component_utils(ball_predictor)
   uvm_analysis_port #(ball_transaction) ap;
 
-  int ball_x = 320, ball_y = 64, ball_speed = settings::ballSpeed;
+  int ball_x = 320, ball_y = 64, ball_speed = settings::ballSpeed, old_x = 320, old_y = 320;
   bit going_down = 1, going_right = 1;
 
   function new(string name = "ball_predictor", uvm_component parent = null);
@@ -39,6 +39,8 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
     expected.inbound = in_ball_x & in_ball_y;
     expected.outLeftBound = ball_x <= 0;
     expected.outRightBound = ball_x > 640;
+    expected.goingRight = going_right;
+    expected.goingDown = going_down;
 
     if (!trans.rst_trans.rst && trans.sc_trans.screenDone) begin
       //Compute all left bounds
@@ -56,12 +58,23 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
       //paddle inbound logic for bouncing
       in_left_paddle = (ball_x >= left_paddle_left & ball_x <= left_paddle_right) & (ball_y >= left_paddle_top & ball_y <= left_paddle_bottom);
       in_right_paddle = (ball_x >= right_paddle_left & ball_x <= right_paddle_right) & (ball_y >= right_paddle_top & ball_y <= right_paddle_bottom);
+      
+      //Save position for later
+      old_y = ball_y;
+      old_x = ball_x;
+
+      //update position
+      ball_x = int'($signed(11'(ball_x + (going_right ? ball_speed : -ball_speed))));
+      ball_y = int'($signed(11'(ball_y + (going_down ? ball_speed : -ball_speed))));
 
       new_dir = ball_speed[1]^ball_speed[0]^going_down^going_right;
 
-      //update position
-      ball_x += going_right ? ball_speed : -ball_speed;
-      ball_y += going_down ? ball_speed : -ball_speed;
+      //Bounce off top and bottom wall
+      if (old_y > 480 - 2*settings::ballRadius) begin
+        going_down = 0;
+      end else if (old_y < 0) begin
+        going_down = 1;
+      end
 
       //Bouncing logic
       if (in_left_paddle & !going_right) begin

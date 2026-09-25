@@ -24,6 +24,7 @@ class ball_env extends uvm_env;
     agent.monitor.in_ap.connect(predictor.analysis_export);
     agent.monitor.out_ap.connect(scoreboard.actual_fifo.analysis_export);
     predictor.ap.connect(scoreboard.expected_fifo.analysis_export);
+    predictor.ap.connect(agent.coverage_reporter.predictor_export);
   endfunction
 
 endclass
