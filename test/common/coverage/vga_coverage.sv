@@ -35,8 +35,7 @@ class vga_coverage extends uvm_component;
       bins one_to_one  = ( 1 => 1 );
     }
 
-    cross_bt1_rst: cross cp_bt1, cp_rst;
-    cross_bt2_rst: cross cp_bt2, cp_rst;
+    cross_bt1_bt2: cross cp_bt1, cp_bt2;
   endgroup
 
   covergroup colour_cg with function sample(bit [1:0] r, bit [1:0] g, bit [1:0] b);
