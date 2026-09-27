@@ -33,9 +33,11 @@ class paddle_test extends uvm_test;
   virtual task main_phase(uvm_phase phase);
     phase.raise_objection(this);
     fork
+      rst_seq.start(env.agent.rst_sequencer);
+    join_none
+    fork
       sc_seq.start(env.agent.sc_sequencer);
       bt_seq.start(env.agent.bt_sequencer);
-      rst_seq.start(env.agent.rst_sequencer);
     join
     phase.drop_objection(this);
   endtask

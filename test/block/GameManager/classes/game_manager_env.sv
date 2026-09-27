@@ -62,8 +62,8 @@ class game_manager_env extends uvm_env;
       game_trans.game_over = game_over;
 
       //Handle paddle inputs (ball relies on paddle positions)
-      left_paddle_predictor.write(paddle_in_trans(screen_trans, screen_trans.bt1_trans, reset_all));
-      right_paddle_predictor.write(paddle_in_trans(screen_trans, screen_trans.bt2_trans, reset_all));
+      left_paddle_predictor.write(paddle_trans(screen_trans, screen_trans.bt1_trans, reset_all));
+      right_paddle_predictor.write(paddle_trans(screen_trans, screen_trans.bt2_trans, reset_all));
       left_paddle_fifo.get(game_trans.pd_l_trans);
       right_paddle_fifo.get(game_trans.pd_r_trans);
 
@@ -84,7 +84,7 @@ class game_manager_env extends uvm_env;
 
   //Sets transaction for paddle prediction
   function screen_button_transaction paddle_trans(screen_buttons_transaction screen_trans, bit_transaction button_trans, bit rst);
-    screen_button_transaction trans = screen_button_transaction::type_id::create("paddle in");
+    screen_button_transaction trans = screen_button_transaction::type_id::create("paddle in trans");
     trans.sc_trans = screen_trans.sc_trans;
     trans.bt_trans = button_trans;
     trans.rst_trans.rst = rst;
