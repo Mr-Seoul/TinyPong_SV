@@ -7,7 +7,7 @@ class game_manager_coverage extends uvm_component;
   uvm_analysis_imp_in #(game_transaction, game_manager_coverage) in_export;
   uvm_analysis_imp_out #(vga_transaction, game_manager_coverage) output_export;
 
-  real pd_l_coverage, pd_r_coverage, bl_coverage;
+  real pd_l_coverage, pd_r_coverage, bl_coverage, bounce_coverage;
   real rst_coverage, out_coverage;
 
   covergroup in_pd_l_cg with function sample(bit inbound, bit [10:0] paddleY);
@@ -56,6 +56,19 @@ class game_manager_coverage extends uvm_component;
 
   endgroup
 
+  covergroup bounce_cg with function sample(bit goingRight, bit goingDown);
+    cp_h_bounce: coverpoint goingRight {
+      bins left_to_right  = ( 0 => 1 );
+      bins right_to_left  = ( 1 => 0 );
+    }
+
+    cp_v_bounce: coverpoint goingDown {
+      bins up_to_down  = ( 0 => 1 );
+      bins down_to_up  = ( 1 => 0 );
+    }
+
+  endgroup
+
   covergroup in_rst with function sample(bit rst, bit game_over);
     cp_rst: coverpoint rst {
       bins low  = { 0 };
@@ -97,6 +110,7 @@ class game_manager_coverage extends uvm_component;
     in_pd_l_cg = new();
     in_pd_r_cg = new();
     in_bl_cg = new();
+    bounce_cg = new();
     in_rst = new();
     out_cg = new();
   endfunction
@@ -105,6 +119,7 @@ class game_manager_coverage extends uvm_component;
     in_pd_l_cg.sample(trans.pd_l_trans.inbound,trans.pd_l_trans.paddleY);
     in_pd_r_cg.sample(trans.pd_r_trans.inbound,trans.pd_r_trans.paddleY);
     in_bl_cg.sample(trans.bl_trans.inbound,trans.bl_trans.outLeftBound,trans.bl_trans.outRightBound);
+    bounce_cg.sample(trans.bl_trans.goingRight, trans.bl_trans.goingDown);
     in_rst.sample(trans.sb_trans.rst_trans.rst, trans.game_over);
   endfunction
 
@@ -117,6 +132,7 @@ class game_manager_coverage extends uvm_component;
     pd_l_coverage = in_pd_l_cg.get_inst_coverage();
     pd_r_coverage = in_pd_r_cg.get_inst_coverage();
     bl_coverage = in_bl_cg.get_inst_coverage();
+    bounce_coverage = bounce_cg.get_inst_coverage();
     rst_coverage = in_rst.get_inst_coverage();
     out_coverage = out_cg.get_inst_coverage();
   endfunction
@@ -126,6 +142,7 @@ class game_manager_coverage extends uvm_component;
     `uvm_info("COV_REPORT", $sformatf("left paddle coverage: %0f", pd_l_coverage), UVM_LOW)
     `uvm_info("COV_REPORT", $sformatf("right paddle coverage: %0f", pd_r_coverage), UVM_LOW)
     `uvm_info("COV_REPORT", $sformatf("ball coverage: %0f", bl_coverage), UVM_LOW)
+    `uvm_info("COV_REPORT", $sformatf("bounce coverage: %0f", bounce_coverage), UVM_LOW)
     `uvm_info("COV_REPORT", $sformatf("reset coverage: %0f", rst_coverage), UVM_LOW)
     `uvm_info("COV_REPORT", $sformatf("colour coverage: %0f", out_coverage), UVM_LOW)
   endfunction

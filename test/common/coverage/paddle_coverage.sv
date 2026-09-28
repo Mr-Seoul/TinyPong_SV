@@ -26,7 +26,6 @@ class paddle_coverage extends uvm_component;
       bins high  = { 1 };
     }
 
-    cross_in_rst: cross cp_in, cp_rst;
   endgroup
 
   covergroup in_sc_cg with function sample(bit [10:0] screenX, bit screenDone);
