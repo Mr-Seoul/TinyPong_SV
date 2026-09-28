@@ -1,6 +1,6 @@
-class frame_bit_driver extends uvm_driver #(bit_transaction);
+class frame_bit_driver #(int FRAME_LENGTH = 420000, int SIZE = 16) extends uvm_driver #(bit_transaction);
 
-  `uvm_component_utils(frame_bit_driver)
+  `uvm_component_param_utils(frame_bit_driver #(FRAME_LENGTH, SIZE))
 
   uvm_analysis_port #(bit_transaction) ap;
   bit_transaction trans;
@@ -16,6 +16,8 @@ class frame_bit_driver extends uvm_driver #(bit_transaction);
     super.build_phase(phase);
     if (!uvm_config_db#(VIF)::get(this, "", "vif", vif))
       `uvm_fatal("DRV", "Could not get vif")
+    if (FRAME_LENGTH < (1 << SIZE) + 4)
+      `uvm_fatal("DRV", $sformatf("FRAME_LENGTH %0d is shorter than the %0d stable cycles the debouncer needs", FRAME_LENGTH, (1 << SIZE) + 4))
     ap = new("ap", this);
   endfunction
 
@@ -30,9 +32,9 @@ class frame_bit_driver extends uvm_driver #(bit_transaction);
   endtask
 
   virtual task drive_trans(bit_transaction trans);
-    int stable_cycles = (1 << 16) + 4; //Cycles needed for debouncer
+    int stable_cycles = (1 << SIZE) + 4; //Cycles needed for debouncer
 
-    repeat (420000 - stable_cycles) begin
+    repeat (FRAME_LENGTH - stable_cycles) begin
       vif.driver_cb.in  <= 1'($urandom_range(0, 1)); //Simulate mechanical noise
       @(vif.driver_cb);
     end

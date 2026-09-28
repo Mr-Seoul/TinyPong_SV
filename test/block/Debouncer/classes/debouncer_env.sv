@@ -2,7 +2,7 @@ class debouncer_env extends uvm_env;
 
   `uvm_component_utils(debouncer_env)
   debouncer_agent agent;
-  debouncer_predictor predictor;
+  debouncer_predictor #(`DEBOUNCER_SIZE) predictor;
   bit_scoreboard scoreboard;
   virtual debouncer_if vif;
 
@@ -15,7 +15,7 @@ class debouncer_env extends uvm_env;
     if (!uvm_config_db#(virtual debouncer_if)::get(this, "", "vif", vif))
       `uvm_fatal("MON", "Could not get vif")
     agent = debouncer_agent::type_id::create("agent", this);
-    predictor = debouncer_predictor::type_id::create("predictor", this);
+    predictor = debouncer_predictor #(`DEBOUNCER_SIZE)::type_id::create("predictor", this);
     scoreboard = bit_scoreboard::type_id::create("scoreboard", this);
   endfunction
 

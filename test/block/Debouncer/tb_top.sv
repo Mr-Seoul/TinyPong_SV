@@ -9,7 +9,7 @@ module tb_top;
 
   debouncer_if dut_if (.clk(clk));
 
-  debouncer #(.SIZE(16)) dut (
+  debouncer #(.SIZE(`DEBOUNCER_SIZE)) dut (
       .clk(clk),
       .rst(dut_if.rst),
       .in (dut_if.in),

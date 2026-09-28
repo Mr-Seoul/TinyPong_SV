@@ -1,7 +1,7 @@
 
-class debouncer_predictor extends uvm_subscriber #(bit_rst_transaction);
+class debouncer_predictor #(int SIZE = 16) extends uvm_subscriber #(bit_rst_transaction);
 
-  `uvm_component_utils(debouncer_predictor)
+  `uvm_component_param_utils(debouncer_predictor #(SIZE))
   uvm_analysis_port #(bit_transaction) ap;
   int count = 0;
   bit out_reg = 0;
@@ -18,7 +18,7 @@ class debouncer_predictor extends uvm_subscriber #(bit_rst_transaction);
 
   virtual function void write(bit_rst_transaction trans);
     bit_transaction expected = bit_transaction::type_id::create("expected");
-    int max_count = (1 << 16) - 1;
+    int max_count = (1 << SIZE) - 1;
 
     if (trans.rst_trans.rst) begin
       count = 0;
