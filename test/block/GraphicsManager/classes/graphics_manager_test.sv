@@ -7,6 +7,7 @@ class graphics_manager_test extends game_manager_test;
 
   virtual function void build_phase(uvm_phase phase);
     game_manager_predictor::type_id::set_type_override(graphics_manager_predictor::get_type());
+    game_manager_coverage::type_id::set_type_override(graphics_manager_coverage::get_type());
     super.build_phase(phase);
   endfunction
 

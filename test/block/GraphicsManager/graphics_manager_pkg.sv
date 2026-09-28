@@ -24,6 +24,7 @@ package graphics_manager_pkg;
   `include "common/drivers/reset_driver.sv"
   `include "common/monitors/game_manager_monitor.sv"
   `include "common/coverage/game_manager_coverage.sv"
+  `include "common/coverage/graphics_manager_coverage.sv"
   `include "block/GameManager/classes/game_manager_agent.sv"
   `include "block/Paddle/classes/paddle_predictor.sv"
   `include "block/Ball/classes/ball_predictor.sv"
