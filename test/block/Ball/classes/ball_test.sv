@@ -36,10 +36,12 @@ class ball_test extends uvm_test;
   virtual task main_phase(uvm_phase phase);
     phase.raise_objection(this);
     fork
+      rst_seq.start(env.agent.rst_sequencer);
+    join_none
+    fork
       sc_seq.start(env.agent.sc_sequencer);
       left_paddle_seq.start(env.agent.left_paddle_sequencer);
       right_paddle_seq.start(env.agent.right_paddle_sequencer);
-      rst_seq.start(env.agent.rst_sequencer);
     join
     phase.drop_objection(this);
   endtask

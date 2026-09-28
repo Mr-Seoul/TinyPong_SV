@@ -39,8 +39,10 @@ class game_manager_test extends uvm_test;
   virtual task main_phase(uvm_phase phase);
     phase.raise_objection(this);
     fork
-      sc_seq.start(env.agent.sc_sequencer);
       rst_seq.start(env.agent.rst_sequencer);
+    join_none
+    fork
+      sc_seq.start(env.agent.sc_sequencer);
       bt1_seq.start(env.agent.bt1_sequencer);
       bt2_seq.start(env.agent.bt2_sequencer);
     join
