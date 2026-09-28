@@ -5,7 +5,7 @@ class vga_test extends uvm_test;
   reset_sequence rst_seq;
   bit_sequence bt1_seq, bt2_seq;
   virtual vga_if vif, bt1_vif, bt2_vif;
-  int frames = 10;
+  int frames = 60;
 
   function new(string name = "vga_test", uvm_component parent = null);
     super.new(name, parent);
