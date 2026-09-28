@@ -32,8 +32,10 @@ class synchronizer_test extends uvm_test;
   virtual task main_phase(uvm_phase phase);
     phase.raise_objection(this);
     fork
-      seq.start(env.agent.sequencer);
       rst_seq.start(env.agent.rst_sequencer);
+    join_none
+    fork
+      seq.start(env.agent.sequencer);
     join
     phase.drop_objection(this);
   endtask
