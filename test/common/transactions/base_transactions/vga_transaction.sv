@@ -28,7 +28,7 @@ class vga_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("r=0x%0d, g=0x%0d, b=0x%0d", this.r, this.g, this.b);
+    string s = $sformatf("VGA Trans: r=%0d, g=%0d, b=%0d", this.r, this.g, this.b);
     return s;
   endfunction
 

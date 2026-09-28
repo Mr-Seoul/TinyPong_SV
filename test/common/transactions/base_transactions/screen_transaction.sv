@@ -8,7 +8,7 @@ class screen_transaction extends uvm_sequence_item;
 
   constraint c1 { screenX dist {[0:655]:/80,[656:751]:/15,[752:799]:/5};}
   constraint c2 { screenY dist {[0:489]:/80,[490:491]:/15,[492:524]:/5};}
-  constraint c3 { screenDone dist {0:/99,1:/1};}
+  constraint c3 { screenDone dist {0:/75,1:/25};}
 
   function new(string name = "screen_transaction");
     super.new(name);
@@ -33,7 +33,7 @@ class screen_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("screenX=0x%0d, screenY=0x%0d, screenDone=%0b", this.screenX, this.screenY, this.screenDone);
+    string s = $sformatf("Screen Trans: screenX=%0d, screenY=%0d, screenDone=%0b", this.screenX, this.screenY, this.screenDone);
     return s;
   endfunction
 

@@ -26,7 +26,7 @@ class timing_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("hsync=0x%0d, vsync=0x%0d", this.hsync, this.vsync);
+    string s = $sformatf("Timing Trans: hsync=%0d, vsync=%0d", this.hsync, this.vsync);
     return s;
   endfunction
 

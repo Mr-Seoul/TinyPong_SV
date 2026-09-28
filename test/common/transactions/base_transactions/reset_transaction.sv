@@ -2,7 +2,7 @@ class reset_transaction extends uvm_sequence_item;
 
   rand bit rst;
 
-  constraint c1 { rst dist {0:/98, 1:/2}; }
+  constraint c1 { rst dist {0:/99, 1:/1}; }
 
   `uvm_object_utils(reset_transaction)
 
@@ -26,7 +26,7 @@ class reset_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("rst=%0b", this.rst);
+    string s = $sformatf("RST Trans: rst=%0b", this.rst);
     return s;
   endfunction
 

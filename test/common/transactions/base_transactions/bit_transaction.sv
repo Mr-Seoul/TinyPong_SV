@@ -3,7 +3,7 @@ class bit_transaction extends uvm_sequence_item;
   rand bit in;
   bit out;
 
-  constraint c1 { in dist {0:/80, 1:/20}; }
+  constraint c1 { in dist {0:/90, 1:/10}; }
 
   `uvm_object_utils(bit_transaction)
 
@@ -28,7 +28,7 @@ class bit_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("in=0x%0d, out=0x%0d", this.in, this.out);
+    string s = $sformatf("Bit Trans: in=%0d, out=%0d", this.in, this.out);
     return s;
   endfunction
 

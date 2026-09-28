@@ -31,7 +31,7 @@ class paddle_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("paddleY=%0d, inbound=%0b, diffX=%0d", this.paddleY, this.inbound, this.diffX);
+    string s = $sformatf("Paddle Trans: paddleY=%0d, inbound=%0b, diffX=%0d", this.paddleY, this.inbound, this.diffX);
     return s;
   endfunction
 

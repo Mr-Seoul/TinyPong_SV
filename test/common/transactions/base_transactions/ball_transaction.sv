@@ -32,7 +32,7 @@ class ball_transaction extends uvm_sequence_item;
   endfunction
 
   virtual function string convert2string();
-    string s = $sformatf("inbound=%0b, outLeftBound=%0b, outRightBound=%0b", this.inbound, this.outLeftBound, this.outRightBound);
+    string s = $sformatf("Ball Trans: inbound=%0b, outLeftBound=%0b, outRightBound=%0b", this.inbound, this.outLeftBound, this.outRightBound);
     return s;
   endfunction
 
