@@ -25,7 +25,7 @@ module paddle
 );
 
 logic signed [10:0] paddleYReg = 240;
-logic signed [10:0] paddleX = (PADDLE_SIDE) ? $bits(paddleX)'(640 - settings::paddleWallDist - settings::paddleWidth) : $bits(paddleX)'(settings::paddleWallDist + settings::paddleWidth);
+logic signed [10:0] paddleX = (PADDLE_SIDE) ? 11'(640 - settings::paddleWallDist - settings::paddleWidth) : 11'(settings::paddleWallDist + settings::paddleWidth);
 
 logic signed [5:0] velocityReg = 0;
 logic signed [10:0] newYPos;
@@ -40,7 +40,7 @@ always_comb begin
     newYPos = $bits(newYPos)'(paddleYReg + velocityReg);
 
     //For dithering logic
-    tempDiffX = (PADDLE_SIDE) ? $bits(tempDiffX)'(paddleX - screenX) :$bits(tempDiffX)'(screenX - paddleX);
+    tempDiffX = (PADDLE_SIDE) ? $bits(tempDiffX)'(screenX - paddleX) :$bits(tempDiffX)'(paddleX - screenX);
 
     //Bound detection
     inXSquare = (tempDiffX <= $bits(tempDiffX)'(settings::paddleWidth)); //tempDiffX is unsigned, so negative values become very large
@@ -74,7 +74,7 @@ always_ff @(posedge clk or posedge rst) begin
                 paddleYReg <= $bits(paddleYReg)'(settings::paddleHeight);
             end else if (newYPos >= 480) begin
                 paddleYReg <= 480;
-            end 
+            end
         end
     end
 end

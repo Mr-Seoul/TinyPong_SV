@@ -29,16 +29,16 @@ logic signed [10:0] ballYReg = 64;
 logic signed [5:0] speedX;
 logic signed [5:0] speedY;
 
-logic signed [5:0] ballSpeedReg = $bits(ballSpeedReg)'(settings::ballSpeed);
+logic signed [5:0] ballSpeedReg = 6'(settings::ballSpeed);
 
 //Paddle bounds
-logic signed [10:0] LeftPaddleLeftBound = $bits(LeftPaddleLeftBound)'(settings::paddleWallDist - settings::paddleWidth);
-logic signed [10:0] LeftPaddleRightBound = $bits(LeftPaddleRightBound)'(settings::paddleWallDist + 2*settings::paddleWidth);
+logic signed [10:0] LeftPaddleLeftBound = 11'(settings::paddleWallDist - settings::paddleWidth);
+logic signed [10:0] LeftPaddleRightBound = 11'(settings::paddleWallDist + 2*settings::ballRadius);
 logic signed [10:0] LeftPaddleTopBound;
 logic signed [10:0] LeftPaddleBottomBound; 
 
-logic signed [10:0] RightPaddleLeftBound = $bits(RightPaddleLeftBound)'(640 - settings::paddleWallDist - settings::paddleWidth - 2*settings::ballRadius);
-logic signed [10:0] RightPaddleRightBound = $bits(RightPaddleRightBound)'(640 - settings::paddleWallDist);
+logic signed [10:0] RightPaddleLeftBound = 11'(640 - settings::paddleWallDist - settings::paddleWidth - 2*settings::ballRadius);
+logic signed [10:0] RightPaddleRightBound = 11'(640 - settings::paddleWallDist);
 logic signed [10:0] RightPaddleTopBound; 
 logic signed [10:0] RightPaddleBottomBound; 
 
@@ -86,10 +86,10 @@ always_ff @(posedge clk or posedge rst) begin
             end
 
             //Bouncing off paddles
-            if (!goingRightReg && ballXReg >= LeftPaddleLeftBound && ballXReg <= LeftPaddleRightBound && ballYReg >= LeftPaddleTopBound && ballYReg <= LeftPaddleBottomBound) begin
+            if (!goingRightReg && ballXReg > LeftPaddleLeftBound && ballXReg < LeftPaddleRightBound && ballYReg > LeftPaddleTopBound && ballYReg < LeftPaddleBottomBound) begin
                 goingRightReg <= 1;
                 goingDownReg <= newDir;
-            end else if (goingRightReg && ballXReg >= RightPaddleLeftBound && ballXReg <= RightPaddleRightBound && ballYReg >= RightPaddleTopBound && ballYReg <= RightPaddleBottomBound) begin
+            end else if (goingRightReg && ballXReg > RightPaddleLeftBound && ballXReg < RightPaddleRightBound && ballYReg > RightPaddleTopBound && ballYReg < RightPaddleBottomBound) begin
                 goingRightReg <= 0;
                 goingDownReg <= newDir;
                 //Speed up ball (unless it overflows)
@@ -106,8 +106,8 @@ logic inSquare;
 
 always_comb begin
     //Check if screenpixel currently is inside the ball
-    inSquareX = (screenX >= ballXReg && screenX <= ballXReg + $bits(screenX)'(2*settings::ballRadius));
-    inSquareY = (screenY >= ballYReg && screenY <= ballYReg + $bits(screenY)'(2*settings::ballRadius));
+    inSquareX = (screenX >= ballXReg && screenX < ballXReg + $bits(screenX)'(2*settings::ballRadius));
+    inSquareY = (screenY >= ballYReg && screenY < ballYReg + $bits(screenY)'(2*settings::ballRadius));
     inSquare = inSquareX && inSquareY;
 
     //Output logic

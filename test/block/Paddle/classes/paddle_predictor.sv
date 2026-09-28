@@ -33,7 +33,7 @@ class paddle_predictor extends uvm_subscriber #(screen_button_transaction);
     //Compute results
     y_min = paddle_y - settings::paddleHeight;
     y_max = paddle_y;
-    diff_x = SIDE ? paddle_x - $bits(int)'(trans.sc_trans.screenX) : $bits(int)'(trans.sc_trans.screenX) - paddle_x;
+    diff_x = SIDE ? $bits(int)'(trans.sc_trans.screenX) - paddle_x : paddle_x - $bits(int)'(trans.sc_trans.screenX);
 
     expected.paddleY = $bits(expected.paddleY)'(paddle_y);
     expected.inbound = ($bits(int)'(trans.sc_trans.screenY) >= y_min) & ($bits(int)'(trans.sc_trans.screenY) <= y_max ) & & (diff_x >= 0) & (diff_x <= settings::paddleWidth);

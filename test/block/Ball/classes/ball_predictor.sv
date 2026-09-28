@@ -33,8 +33,8 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
     end
 
     //Compute results
-    in_ball_x = $bits(int)'(trans.sc_trans.screenX) >= ball_x & $bits(int)'(trans.sc_trans.screenX) <= ball_x + 2*settings::ballRadius;
-    in_ball_y = $bits(int)'(trans.sc_trans.screenY) >= ball_y & $bits(int)'(trans.sc_trans.screenY) <= ball_y + 2*settings::ballRadius;
+    in_ball_x = $bits(int)'(trans.sc_trans.screenX) >= ball_x & $bits(int)'(trans.sc_trans.screenX) < ball_x + 2*settings::ballRadius;
+    in_ball_y = $bits(int)'(trans.sc_trans.screenY) >= ball_y & $bits(int)'(trans.sc_trans.screenY) < ball_y + 2*settings::ballRadius;
 
     expected.inbound = in_ball_x & in_ball_y;
     expected.outLeftBound = ball_x <= 0;
@@ -47,7 +47,7 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
       left_paddle_top = $bits(int)'(trans.pd_l_trans.paddleY) - settings::paddleHeight - settings::ballRadius;
       left_paddle_bottom = $bits(int)'(trans.pd_l_trans.paddleY) + settings::ballRadius;
       left_paddle_left = settings::paddleWallDist - settings::paddleWidth;
-      left_paddle_right = settings::paddleWallDist + 2*settings::paddleWidth;
+      left_paddle_right = settings::paddleWallDist + 2*settings::ballRadius;
 
       //Compute all right bounds
       right_paddle_top = $bits(int)'(trans.pd_r_trans.paddleY) - settings::paddleHeight - settings::ballRadius;
@@ -56,8 +56,8 @@ class ball_predictor extends uvm_subscriber #(screen_button_paddle_transaction);
       right_paddle_right = 640 - settings::paddleWallDist;
 
       //paddle inbound logic for bouncing
-      in_left_paddle = (ball_x >= left_paddle_left & ball_x <= left_paddle_right) & (ball_y >= left_paddle_top & ball_y <= left_paddle_bottom);
-      in_right_paddle = (ball_x >= right_paddle_left & ball_x <= right_paddle_right) & (ball_y >= right_paddle_top & ball_y <= right_paddle_bottom);
+      in_left_paddle = (ball_x > left_paddle_left & ball_x < left_paddle_right) & (ball_y > left_paddle_top & ball_y < left_paddle_bottom);
+      in_right_paddle = (ball_x > right_paddle_left & ball_x < right_paddle_right) & (ball_y > right_paddle_top & ball_y < right_paddle_bottom);
       
       //Save position for later
       old_y = ball_y;
