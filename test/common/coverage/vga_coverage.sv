@@ -44,19 +44,19 @@ class vga_coverage extends uvm_component;
     cp_r: coverpoint r {
       bins low  = { 0 };
       bins dithered  = { [1:2] };
-      bins high  = { 3 };
+      bins left_paddle  = { 3 };
     }
 
     cp_g: coverpoint g {
       bins low  = { 0 };
       bins dithered  = { [1:2] };
-      bins high  = { 3 };
+      bins right_paddle  = { 3 };
     }
 
     cp_b: coverpoint b {
       bins low  = { 0 };
       bins dithered  = { [1:2] };
-      bins high  = { 3 };
+      bins ball  = { 3 };
     }
 
   endgroup
