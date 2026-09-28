@@ -21,7 +21,7 @@ always_comb begin
     slowClk = (clockCountReg == 3);
 end
 
-assert property (@(posedge clk) slowClk ##4 slowClk)
+assert property (@(posedge clk) slowClk  |-> ##4 slowClk)
     else $error("Slowclock not generating pulse every 4 cycles");
 
 endmodule
